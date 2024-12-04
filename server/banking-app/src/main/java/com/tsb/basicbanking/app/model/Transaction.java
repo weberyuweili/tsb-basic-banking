@@ -3,23 +3,43 @@ package com.tsb.basicbanking.app.model;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
+@IdClass(TransactionId.class)
+@SequenceGenerator(name="my_seq", initialValue=1, allocationSize=1)
 public class Transaction {
 
-    @EmbeddedId
-    private TransactionId transactionId;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "account_number")
+    private Account account;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="my_seq")
+    private Long id;
 
     private String description;
     private Double amount;
-    private Date transactionDate;
+    private Timestamp transactionDate;
 
-    public TransactionId getTransactionId() {
-        return transactionId;
+    public Transaction(){}
+
+    public Transaction(Account account, String description,
+           Double amount, Timestamp transactionDate)
+    {
+        this.account = account;
+        this.description = description;
+        this.amount = amount;
+        this.transactionDate = transactionDate;
     }
 
-    public void setTransactionId(TransactionId transactionId) {
-        this.transactionId = transactionId;
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setTransactionId(Account account) {
+        this.account = account;
     }
 
     public String getDescription() {
@@ -38,11 +58,11 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public Date getTransactionDate() {
+    public Timestamp getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(Date transactionDate) {
+    public void setTransactionDate(Timestamp transactionDate) {
         this.transactionDate = transactionDate;
     }
 }

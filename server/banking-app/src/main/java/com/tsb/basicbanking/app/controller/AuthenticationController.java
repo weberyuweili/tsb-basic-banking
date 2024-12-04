@@ -24,7 +24,7 @@ public class AuthenticationController {
         String password = loginRequest.getPassword();
 
         System.out.println(email);
-        var customer = bankingService.Login(email, password);
+        var customer = bankingService.login(email, password);
         return customer;
     }
 }

@@ -1,17 +1,19 @@
 package com.tsb.basicbanking.app.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 
 @Entity
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(unique = true, nullable = false)
     private String id;
     private String name;
+
+    @Column(nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String password;
 
     public void setId(String id) {

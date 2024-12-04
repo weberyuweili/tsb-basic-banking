@@ -1,4 +1,4 @@
-SET @customer_id = UUID();
+SET @customer_id = 'test';
 SET @account_number_1 = '00-0000-0000000-00';
 SET @account_number_2 = '00-0000-0000000-01';
 
@@ -15,7 +15,7 @@ VALUES  (@account_number_2, 'Saving',@customer_id);
 
 
 INSERT INTO Transaction (id, amount, description, transaction_date, account_number)
-VALUES  ( null, 100.50, 'default money', NOW(), @account_number_1);
+VALUES  ( 0, 100.50, 'default money', NOW(), @account_number_1);
 
 INSERT INTO Transaction (id, amount, description, transaction_date, account_number)
-VALUES  ( null, 21.80, 'default money', NOW(), @account_number_2);
+VALUES  ( 0, 21.80, 'default money', NOW(), @account_number_2);
