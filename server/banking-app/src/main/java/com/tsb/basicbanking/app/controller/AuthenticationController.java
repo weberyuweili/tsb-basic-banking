@@ -1,23 +1,30 @@
 package com.tsb.basicbanking.app.controller;
 
+import com.tsb.basicbanking.app.component.JwtUtil;
 import com.tsb.basicbanking.app.dto.LoginRequest;
 import com.tsb.basicbanking.app.model.Customer;
 import com.tsb.basicbanking.app.service.BankingService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
 public class AuthenticationController {
 
     @Autowired
     private BankingService bankingService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @PostMapping("/login")
-    public Customer login(@RequestBody LoginRequest loginRequest)
+    public Customer login(@RequestBody LoginRequest loginRequest,
+                                        HttpServletResponse response)
     {
         // Access email and password from the loginRequest
         String email = loginRequest.getEmail();
@@ -25,6 +32,13 @@ public class AuthenticationController {
 
         System.out.println(email);
         var customer = bankingService.login(email, password);
+
+        var token = jwtUtil.generateToken(email);
+        Cookie cookie = new Cookie("authToken", token);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        response.addCookie(cookie);
         return customer;
     }
 }

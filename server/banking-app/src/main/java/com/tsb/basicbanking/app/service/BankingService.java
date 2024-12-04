@@ -1,5 +1,6 @@
 package com.tsb.basicbanking.app.service;
 
+import com.tsb.basicbanking.app.component.JwtUtil;
 import com.tsb.basicbanking.app.dto.TransferRequest;
 import com.tsb.basicbanking.app.model.Account;
 import com.tsb.basicbanking.app.model.Customer;
@@ -31,8 +32,8 @@ public class BankingService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     public Customer login(String email, String password)
     {

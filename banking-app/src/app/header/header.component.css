@@ -1,0 +1,18 @@
+#container {
+    display: flex;
+    padding: 0px 30px;
+    background-color: #0aa1cf;
+    color: white;
+}
+
+#links{
+    flex-grow: 1;
+    display: flex;
+    gap: 20px;
+    justify-content: right;
+    align-items: center;
+    
+    .link {
+        cursor: pointer;
+    }
+}
