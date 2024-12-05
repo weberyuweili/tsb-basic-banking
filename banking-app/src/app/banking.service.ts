@@ -25,6 +25,13 @@ export interface Transaction {
   transactionDate: string;
 }
 
+export interface TransferRequest
+{
+  toAccountNumber: string;
+  amount: number;
+  reference: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -45,5 +52,9 @@ export class BankingService {
   getTransactions(accountNumber: string): Observable<Transaction[]> {
     console.log(accountNumber);
     return this.http.get<Transaction[]>(`${this.baseUrl}/accounts/${accountNumber}/transactions`);
+  }
+  
+  transfer(accountNumber: string, request: TransferRequest) {
+    return this.http.post<any>(`${this.baseUrl}/accounts/${accountNumber}/transfer`, request);
   }
 }

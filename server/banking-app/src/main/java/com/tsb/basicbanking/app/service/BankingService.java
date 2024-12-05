@@ -3,23 +3,17 @@ package com.tsb.basicbanking.app.service;
 import com.tsb.basicbanking.app.component.JwtUtil;
 import com.tsb.basicbanking.app.dto.AccountDto;
 import com.tsb.basicbanking.app.dto.TransferRequest;
-import com.tsb.basicbanking.app.model.Account;
 import com.tsb.basicbanking.app.model.Customer;
 import com.tsb.basicbanking.app.model.Transaction;
-import com.tsb.basicbanking.app.model.TransactionId;
 import com.tsb.basicbanking.app.repository.AccountRepository;
 import com.tsb.basicbanking.app.repository.CustomerRepository;
 import com.tsb.basicbanking.app.repository.TransactionRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BankingService {
@@ -107,11 +101,11 @@ public class BankingService {
         }
 
         var deductTransaction = new Transaction(fromAccount.get(),
-                request.getDescription(), -request.getAmount(), new Timestamp(System.currentTimeMillis()));
+                request.getReference(), -request.getAmount(), new Timestamp(System.currentTimeMillis()));
         transactionRepository.save(deductTransaction);
 
         var creditTransaction = new Transaction(toAccount.get(),
-                request.getDescription(), request.getAmount(), new Timestamp(System.currentTimeMillis()));
+                request.getReference(), request.getAmount(), new Timestamp(System.currentTimeMillis()));
         transactionRepository.save(creditTransaction);
     }
 }

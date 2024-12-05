@@ -4,7 +4,7 @@ public class TransferRequest
 {
     private String toAccountNumber;
     private double amount;
-    private String description;
+    private String reference;
 
     public String getToAccountNumber() {
         return toAccountNumber;
@@ -22,11 +22,11 @@ public class TransferRequest
         this.amount = amount;
     }
 
-    public String getDescription() {
-        return description;
+    public String getReference() {
+        return reference;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 }

@@ -5,6 +5,8 @@ import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import { CommonModule } from '@angular/common';
+import {TransferComponent} from "../transfer/transfer.component";
+
 @Component({
   selector: 'app-accounts',
   standalone: true,
@@ -15,16 +17,18 @@ import { CommonModule } from '@angular/common';
     MatFormField,
     MatInput,
     MatLabel,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TransferComponent
   ],
   templateUrl: './accounts.component.html',
   styleUrl: './accounts.component.css'
 })
 export class AccountsComponent {
   accounts: Account[] = [];
+  selectedAccount: string = '';
   transactions: Transaction[] = [];
   errorMessage: string = '';
-
+  transferring: boolean = false;
   constructor(private bankingService: BankingService) {}
 
   ngOnInit() {
@@ -43,6 +47,7 @@ export class AccountsComponent {
   }
 
   viewAccountDetails(account: { accountNumber: string }): void {
+    this.transferring = false;
     var accountNumber = account.accountNumber;
     this.bankingService.getTransactions(accountNumber).subscribe({
       next: (transactions) => {
@@ -53,5 +58,15 @@ export class AccountsComponent {
         this.errorMessage = 'Failed to fetch accounts. Please try again later.';
       }
     });
+  }
+
+  makeTransfer(account: { accountNumber: string }): void {
+    this.transferring = true;
+    this.selectedAccount = account.accountNumber;
+  }
+
+  onMoneyTransferred(response: string): void {
+    this.transferring = false;
+    this.ngOnInit();
   }
 }
