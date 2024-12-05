@@ -7,7 +7,9 @@ import java.util.List;
 @Entity
 public class Account {
     @jakarta.persistence.Id
+    @Column(nullable = false)
     private String accountNumber;
+
     private String name;
 
     @ManyToOne

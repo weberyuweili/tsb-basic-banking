@@ -3,8 +3,8 @@ SET @account_number_1 = '00-0000-0000000-00';
 SET @account_number_2 = '00-0000-0000000-01';
 
 
-INSERT INTO Customer (id, name, email, password)
-VALUES (@customer_id, 'Weber', 'weber@tsb.co.nz', 'password');
+INSERT INTO Customer (id, name, email, password, phone_number)
+VALUES (@customer_id, 'Tester', 'test@tsb.co.nz', 'password', '0210000000');
 
 
 INSERT INTO Account (account_number, name, customer_id)

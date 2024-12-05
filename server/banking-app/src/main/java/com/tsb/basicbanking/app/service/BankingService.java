@@ -1,6 +1,5 @@
 package com.tsb.basicbanking.app.service;
 
-import com.tsb.basicbanking.app.component.JwtUtil;
 import com.tsb.basicbanking.app.dto.AccountDto;
 import com.tsb.basicbanking.app.dto.TransferRequest;
 import com.tsb.basicbanking.app.model.Customer;
@@ -9,11 +8,17 @@ import com.tsb.basicbanking.app.repository.AccountRepository;
 import com.tsb.basicbanking.app.repository.CustomerRepository;
 import com.tsb.basicbanking.app.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class BankingService {
@@ -26,6 +31,9 @@ public class BankingService {
 
     @Autowired
     private TransactionRepository transactionRepository;
+
+    @Autowired
+    private PasswordResetService passwordResetService;
 
     public Customer login(String email, String password)
     {
@@ -104,5 +112,27 @@ public class BankingService {
         var creditTransaction = new Transaction(toAccount.get(),
                 request.getReference(), request.getAmount(), new Timestamp(System.currentTimeMillis()));
         transactionRepository.save(creditTransaction);
+    }
+
+    public void requestResetPassword(String phoneNumber)
+    {
+        // Verify user exists
+        Optional<Customer> user = customerRepository.findByPhoneNumber(phoneNumber);
+
+        if (user.isEmpty())
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        // Generate secure token and OTP
+        String resetToken = UUID.randomUUID().toString();
+        String otp = String.format("%06d", new SecureRandom().nextInt(999999));
+        passwordResetService.saveResetDetails(user.get().getPhoneNumber(), resetToken, otp);
+
+        // Send SMS: Since sms is not integrated print it out to console
+        System.out.println("Your OTP is: " + otp);
+
+        // Send email: Since sms is not integrated print it out to console
+        System.out.println("Url to reset: http://localhost:4200/reset-password?token=" + resetToken);
     }
 }

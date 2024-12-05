@@ -16,6 +16,9 @@ public class Customer {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String phoneNumber;
+
     public void setId(String id) {
         this.id = id;
     }
@@ -46,5 +49,13 @@ public class Customer {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

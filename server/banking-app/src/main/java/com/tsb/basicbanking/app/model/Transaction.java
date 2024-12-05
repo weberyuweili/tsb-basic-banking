@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 
 @Entity
 @IdClass(TransactionId.class)
-@SequenceGenerator(name="my_seq", initialValue=1, allocationSize=1)
 public class Transaction {
 
     @Id
@@ -16,11 +15,15 @@ public class Transaction {
     private Account account;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="my_seq")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String description;
+
+    @Column(nullable = false)
     private Double amount;
+
+    @Column(nullable = false)
     private Timestamp transactionDate;
 
     public Transaction(){}
