@@ -14,5 +14,10 @@
     
     .link {
         cursor: pointer;
+        background: none;
+        border: none;
+        outline: none;
+        box-shadow: none;
+        color: white;
     }
 }

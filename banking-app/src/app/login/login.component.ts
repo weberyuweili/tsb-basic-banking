@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { BankingService, LoginRequest, Customer } from '../banking.service';
 import {MatFormField, MatLabel} from "@angular/material/form-field";
@@ -24,18 +24,28 @@ import {MatInput} from "@angular/material/input";
     ],
     standalone: true
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
     email: string = '';
     password: string = '';
     errorMessage: string = '';
 
     constructor(private bankingService: BankingService, private router: Router) {}
 
-    login() {
+    ngOnInit() 
+    {
+        if (this.bankingService.isLoggedIn())
+        {
+            this.router.navigate(['/accounts']);
+        }
+    }
+    
+    login() 
+    {
         const loginRequest: LoginRequest = { email: this.email, password: this.password };
         this.bankingService.login(loginRequest).subscribe({
-            next: (customer: Customer) => {
-                localStorage.setItem('customerId', customer.id); // Save the customer ID for later use
+            next: (response) => {
+                localStorage.setItem('jwtToken', response.token);
+                localStorage.setItem('customerId', response.customerId); // Save the customer ID for later use
                 this.router.navigate(['/accounts']);
             },
             error: () => {

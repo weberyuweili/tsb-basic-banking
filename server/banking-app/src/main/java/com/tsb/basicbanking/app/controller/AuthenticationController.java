@@ -1,6 +1,7 @@
 package com.tsb.basicbanking.app.controller;
 
 import com.tsb.basicbanking.app.component.JwtUtil;
+import com.tsb.basicbanking.app.dto.JwtResponse;
 import com.tsb.basicbanking.app.dto.LoginRequest;
 import com.tsb.basicbanking.app.model.Customer;
 import com.tsb.basicbanking.app.service.BankingService;
@@ -23,7 +24,7 @@ public class AuthenticationController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public Customer login(@RequestBody LoginRequest loginRequest,
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest,
                                         HttpServletResponse response)
     {
         // Access email and password from the loginRequest
@@ -34,11 +35,7 @@ public class AuthenticationController {
         var customer = bankingService.login(email, password);
 
         var token = jwtUtil.generateToken(email);
-        Cookie cookie = new Cookie("authToken", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        response.addCookie(cookie);
-        return customer;
+
+        return ResponseEntity.ok(new JwtResponse(token, customer.getId()));
     }
 }

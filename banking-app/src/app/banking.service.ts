@@ -40,8 +40,13 @@ export class BankingService {
 
   constructor(private http: HttpClient) {}
 
-  login(loginRequest: LoginRequest): Observable<Customer> {
-    return this.http.post<Customer>(`${this.baseUrl}/login`, loginRequest);
+  isLoggedIn(): boolean {
+    const token = localStorage.getItem('jwtToken');
+    return !!token; // Optionally validate the token expiration
+  }
+  
+  login(loginRequest: LoginRequest): Observable<{token: string, customerId: string}> {
+    return this.http.post<{token: string, customerId: string}>(`${this.baseUrl}/login`, loginRequest);
   }
 
   getAccounts(customerId: string): Observable<Account[]> {
