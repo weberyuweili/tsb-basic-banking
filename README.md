@@ -34,18 +34,16 @@ cd your-repository-folder
    ```bash
    cd backend
    ```
-2. Update application properties in `src/main/resources/application.properties`:
-   - Update database and Redis configurations if required.
-3. Build and run the backend:
+2. Build and run the backend:
    ```bash
    ./mvnw spring-boot:run
    ```
-4. Backend will run at `http://localhost:8080`.
+3. Backend will run at `http://localhost:8080`.
 
 #### 3. Frontend Setup
 1. Navigate to the frontend directory:
    ```bash
-   cd frontend
+   cd banking-app
    ```
 2. Install dependencies:
    ```bash
