@@ -47,7 +47,9 @@ export class LoginComponent implements OnInit {
             next: (response) => {
                 localStorage.setItem('jwtToken', response.token);
                 localStorage.setItem('customerId', response.customerId); // Save the customer ID for later use
-                this.router.navigate(['/accounts']);
+                this.router.navigate(['/accounts']).then(() => {
+                    window.location.reload();
+                });;
             },
             error: () => {
                 this.errorMessage = 'Invalid email or password. Please try again.';
