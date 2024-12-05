@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { BankingService, LoginRequest, Customer } from '../banking.service';
 import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {AsyncPipe} from "@angular/common";
+import {AsyncPipe, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from "@angular/material/autocomplete";
 import {MatButton} from "@angular/material/button";
@@ -20,14 +20,15 @@ import {MatInput} from "@angular/material/input";
         MatFormField,
         MatInput,
         MatLabel,
-        MatOption
+        MatOption,
+        NgIf
     ],
     standalone: true
 })
 export class LoginComponent implements OnInit {
     email: string = '';
     password: string = '';
-    errorMessage: string = '';
+    errorMessage: string | null = null;
 
     constructor(private bankingService: BankingService, private router: Router) {}
 

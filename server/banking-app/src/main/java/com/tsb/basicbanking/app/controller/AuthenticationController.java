@@ -30,10 +30,9 @@ public class AuthenticationController
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
 
-        System.out.println(email);
         var customer = bankingService.login(email, password);
 
-        if (!customer.getPassword().equals(password))
+        if (customer == null || !customer.getPassword().equals(password))
         {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid password");
         }
