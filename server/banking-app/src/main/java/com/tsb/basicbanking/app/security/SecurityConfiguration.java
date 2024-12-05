@@ -31,7 +31,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/login", "/password-reset/*").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/login","/password-reset",  "/password-reset/*").permitAll()
                         .anyRequest().authenticated() // Allow all other requests
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

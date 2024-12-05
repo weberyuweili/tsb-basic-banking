@@ -129,10 +129,25 @@ public class BankingService {
         String otp = String.format("%06d", new SecureRandom().nextInt(999999));
         passwordResetService.saveResetDetails(user.get().getPhoneNumber(), resetToken, otp);
 
-        // Send SMS: Since sms is not integrated print it out to console
+        // Send SMS: Since sms service is not integrated print OTP out to console
         System.out.println("Your OTP is: " + otp);
 
-        // Send email: Since sms is not integrated print it out to console
+        // Send email: Since email service is not integrated print URL out to console
         System.out.println("Url to reset: http://localhost:4200/reset-password?token=" + resetToken);
+    }
+
+    public void updateUserPassword(String phoneNumber, String newPassword)
+    {
+        var userOptional = customerRepository.findByPhoneNumber(phoneNumber);
+
+        if (userOptional.isEmpty())
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        var user = userOptional.get();
+        user.setPassword(newPassword);
+
+        customerRepository.save(user);
     }
 }

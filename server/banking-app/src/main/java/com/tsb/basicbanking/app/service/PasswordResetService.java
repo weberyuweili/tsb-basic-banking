@@ -3,8 +3,8 @@ package com.tsb.basicbanking.app.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import redis.embedded.RedisServer;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -23,10 +23,10 @@ public class PasswordResetService
         System.out.println(resetToken);
 
         // Store reset token in Redis
-        redisTemplate.opsForValue().set(tokenKey, resetToken);
+        redisTemplate.opsForValue().set(tokenKey, resetToken, TOKEN_EXPIRATION_TIME, TimeUnit.SECONDS);
 
         // Store OTP in Redis
-        redisTemplate.opsForValue().set(otpKey, otp);
+        redisTemplate.opsForValue().set(otpKey, otp, OTP_EXPIRATION_TIME, TimeUnit.SECONDS);
     }
 
     public boolean verifyOtpAndToken(String phoneNumber, String otp, String resetToken) {
@@ -36,8 +36,6 @@ public class PasswordResetService
         String storedToken = (String) redisTemplate.opsForValue().get(tokenKey);
         String storedOtp = (String) redisTemplate.opsForValue().get(otpKey);
 
-        System.out.println(storedToken);
-        System.out.println(storedOtp);
         return resetToken.equals(storedToken) && otp.equals(storedOtp);
     }
 
@@ -46,5 +44,12 @@ public class PasswordResetService
         String storedToken = (String) redisTemplate.opsForValue().get(tokenKey);
 
         return resetToken.equals(storedToken);
+    }
+
+    public void removeOtpAndToken(String phoneNumber)
+    {
+        String tokenKey = "RESET_TOKEN:" + phoneNumber;
+        String otpKey = "OTP:" + phoneNumber;
+        redisTemplate.delete(Arrays.asList(tokenKey, otpKey));
     }
 }
