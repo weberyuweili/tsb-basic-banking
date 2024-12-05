@@ -1,5 +1,6 @@
 package com.tsb.basicbanking.app.controller;
 
+import com.tsb.basicbanking.app.dto.AccountDto;
 import com.tsb.basicbanking.app.model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
@@ -21,9 +22,9 @@ public class CustomersController {
     private BankingService bankingService;
 
     @GetMapping("/{customerId}/accounts")
-    public List<Account> getAccounts(@PathVariable String customerId)
+    public List<AccountDto> getAccounts(@PathVariable String customerId)
     {
-        List<Account> accounts = null;
+        List<AccountDto> accounts = null;
         try
         {
             accounts = bankingService.getAccounts(customerId);

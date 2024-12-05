@@ -34,14 +34,6 @@ public class Transaction {
         this.transactionDate = transactionDate;
     }
 
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setTransactionId(Account account) {
-        this.account = account;
-    }
-
     public String getDescription() {
         return description;
     }

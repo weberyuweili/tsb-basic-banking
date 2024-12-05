@@ -1,1 +1,28 @@
-<p>accounts works!</p>
+<div class="match-parent">
+    <div class="rounded-rect">
+        <h2>Your Accounts</h2>
+        <div class="row flex-center left">
+            <div class="col-md-4 " *ngFor="let account of accounts">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Account Number: {{ account.accountNumber }}</h5>
+                        <p class="card-text">Balance: ${{ account.balance | number: '1.2-2' }}</p>
+                        <button class="btn btn-primary" (click)="viewAccountDetails(account)">View</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="flex-center right">
+            <div class="col-md-4" *ngFor="let transaction of transactions">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="left">{{ transaction.description }}</div>
+                        <div class="right">Balance: ${{ transaction.amount | number: '1.2-2' }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

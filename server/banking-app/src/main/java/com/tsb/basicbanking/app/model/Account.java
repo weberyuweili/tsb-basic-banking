@@ -1,9 +1,8 @@
 package com.tsb.basicbanking.app.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Account {
@@ -13,6 +12,9 @@ public class Account {
 
     @ManyToOne
     private Customer customer;
+
+    @OneToMany(mappedBy = "account")
+    private List<Transaction> transactions;
 
     public String getAccountNumber() {
         return accountNumber;
@@ -30,5 +32,12 @@ public class Account {
         this.name = name;
     }
 
-    // Getters and Setters
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public double getBalance()
+    {
+        return transactions.stream().mapToDouble(Transaction::getAmount).sum();
+    }
 }

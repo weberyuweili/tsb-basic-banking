@@ -1,6 +1,7 @@
 package com.tsb.basicbanking.app.service;
 
 import com.tsb.basicbanking.app.component.JwtUtil;
+import com.tsb.basicbanking.app.dto.AccountDto;
 import com.tsb.basicbanking.app.dto.TransferRequest;
 import com.tsb.basicbanking.app.model.Account;
 import com.tsb.basicbanking.app.model.Customer;
@@ -41,7 +42,7 @@ public class BankingService {
         return customer.orElse(null);
     }
 
-    public List<Account> getAccounts(String customerId) throws Exception
+    public List<AccountDto> getAccounts(String customerId) throws Exception
     {
         var customer = customerRepository.findById(customerId);
 
@@ -52,7 +53,17 @@ public class BankingService {
 
        var accountsByCustomer = accountRepository.findByCustomer(customer.get());
 
-        return accountsByCustomer.orElse(new ArrayList<>());
+        List<AccountDto> accountDtos = new ArrayList<AccountDto>();
+
+        for (var account : accountsByCustomer)
+        {
+            accountDtos.add(new AccountDto(
+                    account.getAccountNumber(),
+                    account.getName(),
+                    account.getBalance()
+            ));
+        }
+        return accountDtos;
     }
 
     public List<Transaction> getTransactions(String accountNumber) throws Exception

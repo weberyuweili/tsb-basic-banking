@@ -9,6 +9,7 @@ export interface LoginRequest {
 
 export interface Account {
   accountNumber: string;
+  name: string;
   balance: number;
 }
 
@@ -16,6 +17,12 @@ export interface Customer {
   id: string;
   name: string;
   email: string;
+}
+
+export interface Transaction {
+  description: string;
+  amount: string;
+  transactionDate: string;
 }
 
 @Injectable({
@@ -31,6 +38,12 @@ export class BankingService {
   }
 
   getAccounts(customerId: string): Observable<Account[]> {
+    console.log(customerId);
     return this.http.get<Account[]>(`${this.baseUrl}/customer/${customerId}/accounts`);
+  }
+
+  getTransactions(accountNumber: string): Observable<Transaction[]> {
+    console.log(accountNumber);
+    return this.http.get<Transaction[]>(`${this.baseUrl}/accounts/${accountNumber}/transactions`);
   }
 }
