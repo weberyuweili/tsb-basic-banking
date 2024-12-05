@@ -6,14 +6,13 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.sql.Date;
 
-@Component
 public class JwtUtil {
 
-    private final Key secretKey = Jwts.SIG.HS256.key().build(); // Generate a secret key
-    private final long expirationTimeMs = 86400000; // 1 day in milliseconds
+    private static final Key secretKey = Jwts.SIG.HS256.key().build(); // Generate a secret key
+    private static final long expirationTimeMs = 86400000; // 1 day in milliseconds
 
     // Generate a JWT token
-    public String generateToken(String username) {
+    public static String generateToken(String username) {
         return Jwts.builder()
                 .subject(username)
                 .signWith(secretKey) // Sign with the secret key
@@ -21,7 +20,7 @@ public class JwtUtil {
     }
 
     // Validate a JWT token
-    public boolean validateToken(String token) {
+    public static boolean validateToken(String token) {
         try {
             Jwts.parser()
                     .setSigningKey(secretKey)
@@ -34,7 +33,7 @@ public class JwtUtil {
     }
 
     // Extract username from the token
-    public String extractUsername(String token) {
+    public static String extractUsername(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
                 .build()

@@ -27,9 +27,6 @@ public class BankingService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    @Autowired
-    private JwtUtil jwtUtil;
-
     public Customer login(String email, String password)
     {
         var customer = customerRepository.findByEmail(email);

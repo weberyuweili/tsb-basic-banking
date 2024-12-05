@@ -20,9 +20,6 @@ public class AuthenticationController {
     @Autowired
     private BankingService bankingService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest,
                                         HttpServletResponse response)
@@ -34,7 +31,7 @@ public class AuthenticationController {
         System.out.println(email);
         var customer = bankingService.login(email, password);
 
-        var token = jwtUtil.generateToken(email);
+        var token = JwtUtil.generateToken(email);
 
         return ResponseEntity.ok(new JwtResponse(token, customer.getId()));
     }
