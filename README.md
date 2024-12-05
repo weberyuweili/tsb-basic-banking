@@ -1,7 +1,3 @@
-Here’s a sample **README.md** file for your project:
-
----
-
 # TSB Basic Banking Application
 
 This is a basic banking application designed to demonstrate features like user authentication, password reset with OTP, and secure API interactions using JWT. 
