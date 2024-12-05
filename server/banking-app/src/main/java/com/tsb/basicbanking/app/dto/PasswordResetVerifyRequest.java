@@ -1,16 +1,16 @@
 package com.tsb.basicbanking.app.dto;
 
 public class PasswordResetVerifyRequest {
-    private String phoneNumber;
+    private String email;
     private String otp;
     private String token;
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getOtp() {

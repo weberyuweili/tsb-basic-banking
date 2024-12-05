@@ -46,15 +46,15 @@ public class AuthenticationController
     @PostMapping("/password-reset/request")
     public ResponseEntity<?> requestPasswordReset(@RequestBody PasswordResetRequest request)
     {
-        bankingService.requestResetPassword(request.getPhoneNumber());
+        bankingService.requestResetPassword(request.getEmail());
 
-        return ResponseEntity.ok("Password reset instructions sent via SMS.");
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/password-reset/verify")
     public ResponseEntity<?> verifyOtp(@RequestBody PasswordResetVerifyRequest request)
     {
-        var isVerified = passwordResetService.verifyOtpAndToken(request.getPhoneNumber(), request.getOtp(), request.getToken());
+        var isVerified = passwordResetService.verifyOtpAndToken(request.getEmail(), request.getOtp(), request.getToken());
 
         if (!isVerified)
         {
@@ -67,26 +67,20 @@ public class AuthenticationController
     @PostMapping("/password-reset")
     public ResponseEntity<?> resetPassword(@RequestBody PasswordResetCompleteRequest request)
     {
-        var phoneNumber = request.getPhoneNumber();
+        var email = request.getEmail();
         var otp = request.getOtp();
         var token = request.getToken();
         var newPassword = request.getNewPassword();
 
-        var isVerified = passwordResetService.verifyOtpAndToken(phoneNumber, otp, token);
+        var isVerified = passwordResetService.verifyOtpAndToken(email, otp, token);
 
         if (!isVerified)
         {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid OTP or token");
         }
 
-        if (!passwordResetService.isValidToken(phoneNumber, token)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid or expired token");
-        }
+        bankingService.updateUserPassword(email, newPassword);
 
-        bankingService.updateUserPassword(phoneNumber, newPassword);
-
-        // Invalidation
-        passwordResetService.removeOtpAndToken(phoneNumber);
 
         return ResponseEntity.ok().build();
     }

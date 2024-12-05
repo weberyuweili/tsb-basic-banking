@@ -114,10 +114,10 @@ public class BankingService {
         transactionRepository.save(creditTransaction);
     }
 
-    public void requestResetPassword(String phoneNumber)
+    public void requestResetPassword(String email)
     {
         // Verify user exists
-        Optional<Customer> user = customerRepository.findByPhoneNumber(phoneNumber);
+        Optional<Customer> user = customerRepository.findByEmail(email);
 
         if (user.isEmpty())
         {
@@ -127,7 +127,8 @@ public class BankingService {
         // Generate secure token and OTP
         String resetToken = UUID.randomUUID().toString();
         String otp = String.format("%06d", new SecureRandom().nextInt(999999));
-        passwordResetService.saveResetDetails(user.get().getPhoneNumber(), resetToken, otp);
+
+        passwordResetService.saveResetDetails(user.get().getId(), resetToken, otp);
 
         // Send SMS: Since sms service is not integrated print OTP out to console
         System.out.println("Your OTP is: " + otp);
@@ -136,9 +137,9 @@ public class BankingService {
         System.out.println("Url to reset: http://localhost:4200/reset-password?token=" + resetToken);
     }
 
-    public void updateUserPassword(String phoneNumber, String newPassword)
+    public void updateUserPassword(String email, String newPassword)
     {
-        var userOptional = customerRepository.findByPhoneNumber(phoneNumber);
+        var userOptional = customerRepository.findByEmail(email);
 
         if (userOptional.isEmpty())
         {
@@ -149,5 +150,7 @@ public class BankingService {
         user.setPassword(newPassword);
 
         customerRepository.save(user);
+
+        passwordResetService.removeOtpAndToken(user.getId());
     }
 }

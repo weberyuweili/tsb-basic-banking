@@ -1,5 +1,6 @@
 package com.tsb.basicbanking.app.service;
 
+import com.tsb.basicbanking.app.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -13,12 +14,15 @@ public class PasswordResetService
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
+    @Autowired
+    private CustomerRepository customerRepository;
+
     private static final long TOKEN_EXPIRATION_TIME = 3600; // 1 hour in seconds
     private static final long OTP_EXPIRATION_TIME = 600; // 10 minutes in seconds
 
-    public void saveResetDetails(String phoneNumber, String resetToken, String otp) {
-        String tokenKey = "RESET_TOKEN:" + phoneNumber;
-        String otpKey = "OTP:" + phoneNumber;
+    public void saveResetDetails(String userId, String resetToken, String otp) {
+        String tokenKey = "RESET_TOKEN:" + userId;
+        String otpKey = "OTP:" + userId;
 
         System.out.println(resetToken);
 
@@ -29,9 +33,17 @@ public class PasswordResetService
         redisTemplate.opsForValue().set(otpKey, otp, OTP_EXPIRATION_TIME, TimeUnit.SECONDS);
     }
 
-    public boolean verifyOtpAndToken(String phoneNumber, String otp, String resetToken) {
-        String tokenKey = "RESET_TOKEN:" + phoneNumber;
-        String otpKey = "OTP:" + phoneNumber;
+    public boolean verifyOtpAndToken(String email, String otp, String resetToken) {
+
+        var customer = customerRepository.findByEmail(email);
+
+        if (customer.isEmpty())
+        {
+            return false;
+        }
+
+        String tokenKey = "RESET_TOKEN:" + customer.get().getId();
+        String otpKey = "OTP:" + customer.get().getId();
 
         String storedToken = (String) redisTemplate.opsForValue().get(tokenKey);
         String storedOtp = (String) redisTemplate.opsForValue().get(otpKey);
@@ -39,17 +51,10 @@ public class PasswordResetService
         return resetToken.equals(storedToken) && otp.equals(storedOtp);
     }
 
-    public boolean isValidToken(String phoneNumber, String resetToken) {
-        String tokenKey = "RESET_TOKEN:" + phoneNumber;
-        String storedToken = (String) redisTemplate.opsForValue().get(tokenKey);
-
-        return resetToken.equals(storedToken);
-    }
-
-    public void removeOtpAndToken(String phoneNumber)
+    public void removeOtpAndToken(String userId)
     {
-        String tokenKey = "RESET_TOKEN:" + phoneNumber;
-        String otpKey = "OTP:" + phoneNumber;
+        String tokenKey = "RESET_TOKEN:" + userId;
+        String otpKey = "OTP:" + userId;
         redisTemplate.delete(Arrays.asList(tokenKey, otpKey));
     }
 }
